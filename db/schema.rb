@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_07_050030) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_050803) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_07_050030) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "game_sessions", "users"
-  add_foreign_key "leaderboards", "users"
+  add_foreign_key "game_sessions", "users", on_delete: :cascade
+  add_foreign_key "leaderboards", "users", on_delete: :cascade
 end
