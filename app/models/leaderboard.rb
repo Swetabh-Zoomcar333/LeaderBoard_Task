@@ -12,9 +12,18 @@ class Leaderboard < ApplicationRecord
   end
 
   def self.adjust_ranks
-    Leaderboard.order(total_score: :desc).each_with_index do |record,index|
-      record.update(rank: index+1)
-    end
+    # Leaderboard.order(total_score: :desc).each_with_index do |record,index|
+    #   record.update(rank: index+1)
+    # end
+
+
+    update_query =  <<-SQL
+      with ranked as ( select id, rank() over(order by total_score desc) as new_rank from leaderboards)
+      update leaderboards set rank = ranked.new_rank from ranked where leaderboards.id = ranked.id;
+    SQL
+
+    ActiveRecord::Base.connection.exec_query(update_query)
+
   end
 
 end
