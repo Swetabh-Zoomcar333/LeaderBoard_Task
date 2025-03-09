@@ -1,4 +1,4 @@
-class LeaderBoardConteroller < ApplicationController
+class LeaderboardController < ApplicationController
 
   def submit_score
     user = User.find(params[:user_id])
