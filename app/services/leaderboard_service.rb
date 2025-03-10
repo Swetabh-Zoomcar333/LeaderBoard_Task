@@ -1,10 +1,16 @@
 class LeaderboardService
   def self.submit_score(user_id,score,game_mode)
     user = User.find(user_id)
-    GameSession.create!(user: user, score: score, game_mode: game_mode)
+    
+    
+    ActiveRecord::Base.transaction do
+      GameSession.create!(user: user, score: score, game_mode: game_mode)
+  
+      Leaderboard.update_leaderboard(user.id, score)
+      Leaderboard.adjust_ranks
+      
+    end
 
-    Leaderboard.update_leaderboard(user.id, score)
-    Leaderboard.adjust_ranks
 
     RedisClient.del("top_players")
     RedisClient.del("player_rank_#{user_id}")
