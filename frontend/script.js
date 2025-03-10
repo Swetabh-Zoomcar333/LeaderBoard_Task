@@ -2,7 +2,7 @@ const API_BASE_URL = "http://localhost:3000/api/leaderboard";
 
 async function fetchLeaderboard() {
   try {
-    console.log('Refreshing')
+    console.log("Refreshing");
     const response = await fetch(`${API_BASE_URL}/top`);
     const data = await response.json();
     const tbody = document.querySelector("#leaderboard tbody");
@@ -32,7 +32,6 @@ async function fetchUserRank() {
   }
 }
 document.addEventListener("DOMContentLoaded", () => {
-    fetchLeaderboard();
-    setInterval(fetchLeaderboard, 10000);
+  fetchLeaderboard();
+  setInterval(fetchLeaderboard, 10000);
 });
-  
