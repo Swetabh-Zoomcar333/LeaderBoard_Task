@@ -19,7 +19,7 @@ class Leaderboard < ApplicationRecord
 
     update_query =  <<-SQL
       with ranked as ( select id, rank() over(order by total_score desc) as new_rank from leaderboards)
-      update leaderboards set rank = ranked.new_rank from ranked where leaderboards.id = ranked.id;
+      update leaderboards set rank = ranked.new_rank from ranked where leaderboards.id = ranked.id and leaderboards.rank is distinct from ranked.new_rank;
     SQL
 
     ActiveRecord::Base.connection.exec_query(update_query)
