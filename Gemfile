@@ -55,3 +55,5 @@ group :development, :test do
 
   gem "dotenv-rails"
 end
+
+gem "redis", "~> 5.4"
