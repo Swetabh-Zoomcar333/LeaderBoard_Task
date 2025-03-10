@@ -22,7 +22,8 @@ class LeaderboardController < ApplicationController
   private
 
   def validate_params
-    render json: { error: "Missing parameters" }, status: 400 unless params[:user_id] && params[:score] && params[:game_mode]
+    errors = ValidationService.validate_params(params)
+    render json: {error: errors}, status:400 if errors
   end
 
 end
