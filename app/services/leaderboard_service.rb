@@ -6,15 +6,38 @@ class LeaderboardService
     Leaderboard.update_leaderboard(user.id, score)
     Leaderboard.adjust_ranks
 
+    RedisClient.del("top_players")
+    RedisClient.del("player_rank_#{user_id}")
+
   end
 
   def self.top_players
-    Leaderboard.order(total_score: :desc).limit(10).includes(:user)
+
+    cached_top = RedisClient.get("top_players")
+
+    if cached_top 
+      JSON.parse(cached_top)
+    else
+      top_players = Leaderboard.order(total_score: :desc).limit(10).includes(:user)
+      RedisClient.setex("top_players",60,top_players.to_json)
+      top_players
+    end
+
+    
   end
 
   def self.player_rank(user_id)
-    player = Leaderboard.find_by(user_id: user_id)
-    player&.rank || "Not ranked now"
+    cached_rank = RedisClient.get("player_rank_#{user_id}")
+    if cached_rank
+      cached_rank.to_i
+    else
+      player = player = Leaderboard.find_by(user_id: user_id)
+      rank = player&.rank || "Not ranked now"
+      RedisClient.setex("player_rank_#{user_id}",60,rank.to_s)
+      rank
+    end
+    
+    
   end
 
 end
