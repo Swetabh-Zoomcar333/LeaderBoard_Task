@@ -34,7 +34,8 @@ async function fetchUserRank() {
     console.error("Error fetching user rank:", error);
   }
 }
-
-// Auto-update leaderboard every 10 seconds
-setInterval(fetchLeaderboard, 10000);
-fetchLeaderboard();
+document.addEventListener("DOMContentLoaded", () => {
+    fetchLeaderboard();
+    setInterval(fetchLeaderboard, 10000);
+  });
+  
