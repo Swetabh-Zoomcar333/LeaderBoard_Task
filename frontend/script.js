@@ -1,12 +1,10 @@
-console.log("Working");
-
 const API_BASE_URL = "http://localhost:3000/api/leaderboard";
 
 async function fetchLeaderboard() {
   try {
+    console.log('Refreshing')
     const response = await fetch(`${API_BASE_URL}/top`);
     const data = await response.json();
-    console.log(data);
     const tbody = document.querySelector("#leaderboard tbody");
     tbody.innerHTML = "";
     data.forEach((player, index) => {
@@ -28,7 +26,6 @@ async function fetchUserRank() {
   try {
     const response = await fetch(`${API_BASE_URL}/rank/${userId}`);
     const data = await response.json();
-    console.log(data)
     document.getElementById("rank-result").innerText = `Rank: ${data.rank}`;
   } catch (error) {
     console.error("Error fetching user rank:", error);
@@ -37,5 +34,5 @@ async function fetchUserRank() {
 document.addEventListener("DOMContentLoaded", () => {
     fetchLeaderboard();
     setInterval(fetchLeaderboard, 10000);
-  });
+});
   
