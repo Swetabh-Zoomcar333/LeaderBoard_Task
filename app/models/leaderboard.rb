@@ -14,22 +14,13 @@ class Leaderboard < ApplicationRecord
 
   def self.adjust_ranks(user_id,old_score,new_score)
 
-ActiveRecord::Base.transaction do
-
-    leaderboard_entry = Leaderboard.find_by(user_id: user_id)
-
-    old_rank = leaderboard_entry.rank;
-
-    new_rank = Leaderboard.where("total_score > ?",new_score).count + 1
-
-    #return if new_rank == old_rank
-
-    Leaderboard.where("rank >= ? and rank < ?",new_rank, old_rank).update_all("rank = rank + 1")
-
-    leaderboard_entry.update!(rank:new_rank,total_score: new_score)
-
-
-end
+    ActiveRecord::Base.transaction do
+      leaderboard_entry = Leaderboard.find_by(user_id: user_id)
+      old_rank = leaderboard_entry.rank;
+      new_rank = Leaderboard.where("total_score > ?",new_score).count + 1
+      Leaderboard.where("rank >= ? and rank < ?",new_rank, old_rank).update_all("rank = rank + 1")
+      leaderboard_entry.update!(rank:new_rank,total_score: new_score)
+    end
     # Leaderboard.order(total_score: :desc).each_with_index do |record,index|
     #   record.update(rank: index+1)
     # end
@@ -41,12 +32,5 @@ end
     # SQL
 
     # ActiveRecord::Base.connection.exec_query(update_query)
-
-
-
-
-
-
   end
-
 end
