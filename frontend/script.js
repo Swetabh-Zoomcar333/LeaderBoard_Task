@@ -5,6 +5,7 @@ async function fetchLeaderboard() {
     console.log("Refreshing");
     const response = await fetch(`${API_BASE_URL}/top`);
     const data = await response.json();
+    data.sort((a,b)=> a.rank - b.rank)
     const tbody = document.querySelector("#leaderboard tbody");
     tbody.innerHTML = "";
     data.forEach((player, index) => {
