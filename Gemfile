@@ -57,3 +57,5 @@ group :development, :test do
 end
 
 gem "redis", "~> 5.4"
+
+gem "dry-validation", "~> 1.11"
