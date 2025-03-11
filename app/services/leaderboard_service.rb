@@ -4,8 +4,8 @@ class LeaderboardService
     
     ActiveRecord::Base.transaction do
       GameSession.create!(user: user, score: score, game_mode: game_mode)
-      Leaderboard.update_leaderboard(user.id, score)
-      Leaderboard.adjust_ranks
+      old_score, new_score = Leaderboard.update_leaderboard(user.id, score)
+      Leaderboard.adjust_ranks(user.id,old_score,new_score)
     end
 
     RedisClient.del("top_players")
@@ -18,8 +18,8 @@ class LeaderboardService
     if cached_top 
       JSON.parse(cached_top)
     else
-      top_players = Leaderboard.order(total_score: :desc).limit(10).includes(:user)
-      RedisClient.setex("top_players",60,top_players.to_json)
+      top_players = Leaderboard.where(rank: 1..10).includes(:user)
+      RedisClient.set("top_players",top_players.to_json)
       top_players
     end   
   end
@@ -31,7 +31,7 @@ class LeaderboardService
     else
       player = player = Leaderboard.find_by(user_id: user_id)
       rank = player&.rank || "Not ranked now"
-      RedisClient.setex("player_rank_#{user_id}",60,rank.to_s)
+      RedisClient.set("player_rank_#{user_id}",rank.to_s)
       rank
     end
   end
