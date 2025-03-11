@@ -10,7 +10,7 @@ async function fetchLeaderboard() {
     tbody.innerHTML = "";
     data.forEach((player, index) => {
       const row = `<tr>
-                                    <td>${index + 1}</td>
+                                    <td>${player.rank}</td>
                                     <td>${player.user_id}</td>
                                     <td>${player.total_score}</td>
                                 </tr>`;
