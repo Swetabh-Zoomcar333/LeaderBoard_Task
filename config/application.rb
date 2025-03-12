@@ -2,6 +2,7 @@ require_relative "boot"
 
 require "rails/all"
 
+require_relative "../lib/middleware/jwt_auth_middleware"
 require_relative "../lib/middleware/rate_limiter"
 
 
@@ -33,10 +34,23 @@ module LeaderboardTask
 
     #rate-limiter
 
-    config.eager_load_paths << Rails.root.join("lib")
+    config.eager_load_paths << Rails.root.join("lib","middleware")
 
 
-    config.middleware.insert_before 0, RateLimiter
+    #config.middleware.insert_before 0, RateLimiter
+
+    config.middleware.use JwtAuthMiddleware
+    config.middleware.use RateLimiter
+
+    config.middleware.use ActionDispatch::Cookies
+config.middleware.use ActionDispatch::Session::CookieStore, key: '_your_app_session'
+
+    config.action_dispatch.cookies_same_site_protection = :none
+
+
+    # config.middleware.insert_before 0, JwtAuthMiddleware # Runs before rate limiting
+    # config.middleware.insert_before RateLimiter, JwtAuthMiddleware
+
 
     config.api_only = true
   end

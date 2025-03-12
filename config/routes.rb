@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  post '/login', to: 'sessions#login'
+  delete '/logout', to: 'sessions#logout'
+
   post "/api/leaderboard/submit", to: "leaderboard#submit_score"
   get "/api/leaderboard/top", to: "leaderboard#top_players"
   get "/api/leaderboard/rank/:user_id", to: "leaderboard#player_rank"
