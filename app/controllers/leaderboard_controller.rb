@@ -4,14 +4,14 @@ class LeaderboardController < ApplicationController
 
   def submit_score
 
-    LeaderboardService.submit_score(@validated_params[:user_id],@validated_params[:score].to_i,@validated_params[:game_mode])
+    LeaderboardService.new(@validated_params[:user_id],@validated_params[:score].to_i,@validated_params[:game_mode]).submit_score
     render json: { message: "Updated score and leaderboard!" }
 
   end
 
   def top_players
     top = LeaderboardService.top_players
-    render json: top, include: :user
+    render json: top
   end
 
   def player_rank

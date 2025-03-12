@@ -1,15 +1,23 @@
 class LeaderboardService
-  def self.submit_score(user_id,score,game_mode)
-    user = User.find(user_id)
-    
+
+
+  def initialize(user_id,score,game_mode)
+    @user = User.find(user_id)
+    @score = score
+    @game_mode = game_mode
+    @leaderboard_entry = Leaderboard.find_by(user_id: @user.id)
+  end
+
+  def submit_score
+
     ActiveRecord::Base.transaction do
-      GameSession.create!(user: user, score: score, game_mode: game_mode)
-      old_score, new_score = Leaderboard.update_leaderboard(user.id, score)
-      Leaderboard.adjust_ranks(user.id,old_score,new_score)
+      GameSession.create!(user: @user, score: @score, game_mode: @game_mode)
+      @leaderboard_entry.update_leaderboard!(@score)
+      @leaderboard_entry.adjust_ranks!
     end
 
     RedisClient.del("top_players")
-    RedisClient.del("player_rank_#{user_id}")
+    RedisClient.del("player_rank_#{@user.id}")
 
   end
 
@@ -24,7 +32,7 @@ class LeaderboardService
     end   
   end
 
-  def self.player_rank(user_id)
+  def player_rank(user_id)
     cached_rank = RedisClient.get("player_rank_#{user_id}")
     if cached_rank
       cached_rank.to_i
