@@ -9,8 +9,6 @@ class JsonWebToken
   end
 
   def self.decode(token)
-    puts 'Inside decode'
-    puts "Token received: #{token.inspect}"
     payload = JWT.decode(token, SECRET_KEY, true, {algorithm: 'HS256' })[0]
     puts "payload #{payload}"
     HashWithIndifferentAccess.new(payload)
