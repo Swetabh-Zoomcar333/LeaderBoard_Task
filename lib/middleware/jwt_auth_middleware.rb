@@ -16,7 +16,6 @@ class JwtAuthMiddleware
     if token.present?
       decoded_token = JsonWebToken.decode(token)
       if decoded_token
-        
         env['jwt.payload'] = decoded_token
         puts "Decoded JWT: #{decoded_token}"
         return @app.call(env)
