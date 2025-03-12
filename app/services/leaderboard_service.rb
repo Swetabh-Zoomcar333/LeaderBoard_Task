@@ -32,7 +32,7 @@ class LeaderboardService
     end   
   end
 
-  def player_rank(user_id)
+  def self.player_rank(user_id)
     cached_rank = RedisClient.get("player_rank_#{user_id}")
     if cached_rank
       cached_rank.to_i
