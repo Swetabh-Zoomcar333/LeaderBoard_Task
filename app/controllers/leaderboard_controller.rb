@@ -3,7 +3,10 @@ class LeaderboardController < ApplicationController
   before_action :validate_params, only: [:submit_score]
 
   def submit_score
-
+    if @current_user_id.to_i != @validated_params[:user_id].to_i
+      render json: {error: "Unauthorized"}, status:429
+      return
+    end
     LeaderboardService.new(@current_user_id,@validated_params[:score].to_i,@validated_params[:game_mode]).submit_score
     render json: { message: "Updated score and leaderboard!" }
 
@@ -24,7 +27,7 @@ class LeaderboardController < ApplicationController
   def validate_params
     # errors = ValidationService.validate_params(params)
     # render json: {error: errors}, status:400 if errors
-    validation =ValidationService.new.call(params.to_unsafe_h)
+    validation = ValidationService.new.call(params.to_unsafe_h)
     if validation.success?
       @validated_params = validation.to_h
     else
