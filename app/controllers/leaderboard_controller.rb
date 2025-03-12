@@ -4,7 +4,7 @@ class LeaderboardController < ApplicationController
 
   def submit_score
     if @current_user_id.to_i != @validated_params[:user_id].to_i
-      render json: {error: "Unauthorized"}, status:429
+      render json: {error: "Unauthorized to modify this user's score"}, status:401
       return
     end
     LeaderboardService.new(@current_user_id,@validated_params[:score].to_i,@validated_params[:game_mode]).submit_score
@@ -38,7 +38,7 @@ class LeaderboardController < ApplicationController
   def authenticate_user
     jwt_payload = request.env["jwt.payload"]
     if jwt_payload.nil?
-      render json: { error: "Unauthorized" }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: 401
     else
       @current_user_id = jwt_payload["user_id"]
     end

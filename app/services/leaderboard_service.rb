@@ -37,7 +37,7 @@ class LeaderboardService
     if cached_rank
       cached_rank.to_i
     else
-      player = player = Leaderboard.find_by(user_id: user_id)
+      player  = Leaderboard.find_by(user_id: user_id)
       rank = player&.rank || "Not ranked now"
       REDIS.set("player_rank_#{user_id}",rank.to_s)
       rank

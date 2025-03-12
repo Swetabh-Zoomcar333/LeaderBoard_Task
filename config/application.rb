@@ -43,14 +43,9 @@ module LeaderboardTask
     config.middleware.use RateLimiter
 
     config.middleware.use ActionDispatch::Cookies
-config.middleware.use ActionDispatch::Session::CookieStore, key: '_your_app_session'
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_your_app_session'
 
     config.action_dispatch.cookies_same_site_protection = :none
-
-
-    # config.middleware.insert_before 0, JwtAuthMiddleware # Runs before rate limiting
-    # config.middleware.insert_before RateLimiter, JwtAuthMiddleware
-
 
     config.api_only = true
   end
