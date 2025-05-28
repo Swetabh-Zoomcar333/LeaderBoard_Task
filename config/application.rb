@@ -39,8 +39,8 @@ module LeaderboardTask
 
     #config.middleware.insert_before 0, RateLimiter
 
-    config.middleware.use JwtAuthMiddleware
     config.middleware.use RateLimiter
+    config.middleware.use JwtAuthMiddleware
 
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore, key: '_your_app_session'
