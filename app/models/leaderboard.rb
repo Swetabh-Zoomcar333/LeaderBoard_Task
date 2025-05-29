@@ -14,7 +14,7 @@ class Leaderboard < ApplicationRecord
    old_rank = rank
    new_rank = Leaderboard.where("total_score > ?",total_score).count + 1
    Leaderboard.where("rank >= ? and rank < ?",new_rank,old_rank).update_all("rank = rank + 1")
-   update(rank: new_rank)
+   update!(rank: new_rank)
 
 
     # Leaderboard.order(total_score: :desc).each_with_index do |record,index|
